@@ -2,6 +2,8 @@ package main.backend.repositories;
 
 import main.backend.models.User;
 
+import java.util.Optional;
+
 public interface ExtendedUserRepo {
-    User findByLogin(String login);
+    Optional<User> findByLogin(String login);
 }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface UsersService {
     User addNewUser(String login, String password) ;
-     List<User> getAllUsers();
+    User attemptLogin(String login, String password);
 }
