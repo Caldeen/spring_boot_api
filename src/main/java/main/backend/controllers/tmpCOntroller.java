@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.logging.Logger;
 
 @RestController()
 public class tmpCOntroller {
@@ -19,6 +18,21 @@ public class tmpCOntroller {
     @Autowired
     public tmpCOntroller(JwtService jwtService) {
         this.jwtService = jwtService;
+    }
+    @GetMapping("/")
+    public ResponseEntity<String> index(){
+        return ResponseEntity.status(HttpStatus.OK).body("""
+                register at /register with json body:
+                {
+                    "login": "your_login",
+                    "password": "your_password"
+                }
+                login at /login with json body:
+                {
+                    "login": "your_login",
+                    "password": "your_password"
+                }
+                """);
     }
     @GetMapping("/test")
     public ResponseEntity<String> test(@RequestHeader("Authorization") String token){

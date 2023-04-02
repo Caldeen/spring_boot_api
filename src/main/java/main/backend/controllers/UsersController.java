@@ -1,23 +1,16 @@
 package main.backend.controllers;
 
-import io.jsonwebtoken.Jwts;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.val;
 import main.backend.models.User;
 import main.backend.services.JwtService;
 import main.backend.services.UsersService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.PasswordAuthentication;
-import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(exposedHeaders = "Authorization")
 public class UsersController {
 
     private final UsersService usersService;
@@ -33,7 +26,10 @@ public class UsersController {
         try{
             User createdUser = usersService.addNewUser(user.getLogin(), user.getPassword());
             Logger.getGlobal().info(createdUser.getLogin() + " " + createdUser.getPassword());
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+            String token = jwtService.generateToken(createdUser.getId());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .header("Authorization", "Bearer " +token)
+                    .body(createdUser);
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(user);
@@ -43,7 +39,7 @@ public class UsersController {
     public ResponseEntity<User> attemptLogin(@RequestBody User user){
         try{
             User foundUser = usersService.attemptLogin(user.getLogin(), user.getPassword());
-            String token = jwtService.generateToken(foundUser.getLogin());
+            String token = jwtService.generateToken(foundUser.getId());
             Logger.getGlobal().info("Token: " + token);
             Logger.getGlobal().info(jwtService.to_string(token));
             return ResponseEntity.status(HttpStatus.OK).

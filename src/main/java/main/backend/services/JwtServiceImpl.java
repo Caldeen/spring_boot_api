@@ -17,23 +17,22 @@ public class JwtServiceImpl implements JwtService {
         this.env = env;
     }
     @Override
-    public String generateToken(String login) {
+    public String generateToken(Long id) {
         return Jwts.builder()
-                .setSubject(login)
+                .setSubject(id.toString())
                 .claim("role", "user")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(Objects.requireNonNull(env.getProperty("jwtExpiration")))))
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("jwtSecret"))
                 .compact();
     }
-
     @Override
-    public String getLoginFromToken(String token) {
-        return Jwts.parser()
+    public Long getIdFromToken(String token) {
+        return Long.parseLong(Jwts.parser()
                 .setSigningKey(env.getProperty("jwtSecret"))
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getSubject());
     }
 
     @Override
