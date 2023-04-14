@@ -6,5 +6,11 @@ import java.util.List;
 
 public interface QuoteService {
     Quote getQuoteById(Long id);
-    List<Quote> getAllQuotes();
+
+    String[] getTags();
+
+    Quote getRandomQuote();
+
+    List<Quote> getQuotesByAuthor(String author);
+
 }
