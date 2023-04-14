@@ -1,6 +1,7 @@
 package main.backend.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
+import main.backend.DTOs.UserResponse;
 import main.backend.models.User;
 import main.backend.services.JwtService;
 import main.backend.services.UsersService;
@@ -22,31 +23,28 @@ public class UsersController {
         this.jwtService = jwtService;
     }
     @PostMapping(value="/register", produces ="application/json")
-    public ResponseEntity<User> addUser(@RequestBody User user){
+    public ResponseEntity<UserResponse> addUser(@RequestBody User user){
         try{
-            User createdUser = usersService.addNewUser(user.getLogin(), user.getPassword());
-            Logger.getGlobal().info(createdUser.getLogin() + " " + createdUser.getPassword());
+            UserResponse createdUser = usersService.addNewUser(user.getLogin(), user.getPassword());
             String token = jwtService.generateToken(createdUser.getId());
             return ResponseEntity.status(HttpStatus.CREATED)
                     .header("Authorization", "Bearer " +token)
                     .body(createdUser);
         }
         catch (Exception e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(user);
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
     @PostMapping(value="/login", produces ="application/json")
-    public ResponseEntity<User> attemptLogin(@RequestBody User user){
+    public ResponseEntity<UserResponse> attemptLogin(@RequestBody User user){
         try{
-            User foundUser = usersService.attemptLogin(user.getLogin(), user.getPassword());
+            UserResponse foundUser = usersService.attemptLogin(user.getLogin(), user.getPassword());
             String token = jwtService.generateToken(foundUser.getId());
-            Logger.getGlobal().info("Token: " + token);
-            Logger.getGlobal().info(jwtService.to_string(token));
             return ResponseEntity.status(HttpStatus.OK).
                     header("Authorization", "Bearer " +token)
-                    .build();
+                    .body(foundUser);
         }catch(EntityNotFoundException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(user);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
     @GetMapping(value="/login", produces ="application/json")

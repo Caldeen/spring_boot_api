@@ -1,11 +1,8 @@
 package main.backend.services;
 
-import main.backend.models.User;
-
-import java.lang.reflect.Array;
-import java.util.List;
+import main.backend.DTOs.UserResponse;
 
 public interface UsersService {
-    User addNewUser(String login, String password) ;
-    User attemptLogin(String login, String password);
+    UserResponse addNewUser(String login, String password) ;
+    UserResponse attemptLogin(String login, String password);
 }

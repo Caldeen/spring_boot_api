@@ -20,7 +20,6 @@ public class ExtendedUserRepoImpl implements ExtendedUserRepo{
             return Optional.ofNullable(foundUser);
         }
         catch (Exception e){
-            Logger.getGlobal().info(e.toString());
             return Optional.empty();
         }
     }
