@@ -5,19 +5,20 @@ import main.backend.DTOs.UserResponse;
 import main.backend.models.User;
 import main.backend.services.JwtService;
 import main.backend.services.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.logging.Logger;
 
+@CrossOrigin
 @RestController
-@CrossOrigin(exposedHeaders = "Authorization")
 public class UsersController {
 
     private final UsersService usersService;
 
     private final JwtService jwtService;
-
+    @Autowired
     public UsersController(UsersService usersService, JwtService jwtService) {
         this.usersService = usersService;
         this.jwtService = jwtService;

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController()
-public class tmpCOntroller {
+public class HomeController {
 
     private final JwtService jwtService;
     @Autowired
-    public tmpCOntroller(JwtService jwtService) {
+    public HomeController(JwtService jwtService) {
         this.jwtService = jwtService;
     }
     @GetMapping("/")
